@@ -1,15 +1,15 @@
 
-#!usr/bin/env
+!usr/bin/env
 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression ,LogisticRegression
 from sklearn.cross_validation import train_test_split
 from scipy.stats import chisqprob
-from numpy.linalg import lstsq
-from numpy import dot, invert as inv
+from numpy.linalg import lstsq, inv
+from numpy import dot
 
 #Importing data
 loansData = pd.read_csv(
@@ -38,11 +38,11 @@ Vars = ['Amount.Requested', 'Amount.Funded.By.Investors', 'Interest.Rate_pc_floa
 
 
 # PairGrid class in Seaborn
-g = sns.PairGrid(loansData, vars=Vars)
-g = g.map_lower(sns.kdeplot)
-g = g.map_diag(plt.hist)
-g = g.map_upper(plt.scatter, s=5)
-g.savefig('scatterplot.pdf')
+#g = sns.PairGrid(loansData, vars=Vars)
+#g = g.map_lower(sns.kdeplot)
+#g = g.map_diag(plt.hist)
+#g = g.map_upper(plt.scatter, s=5)
+#g.savefig('scatterplot.pdf')
 
 # Setting up variables for Linear Regression
 # InterestRate = b + a1(FICOScore) + a2(LoanAmount)
@@ -69,6 +69,8 @@ regressor = LinearRegression()
 regressor.fit(X_train, y_train)
 
 Rsq = regressor.score(X_test, y_test)
+
+
 
 # Testing model against data
 print("R-squared with scikit-learn LinearRegression: {}".format(Rsq))
