@@ -5,7 +5,34 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn import linear_model
+from sklearn.cross_validation import train_test_split
+from scipy.stats import chisqprob
+from numpy.linalg import lstsq, inv
+from numpy import dot
 from statsmodels.discrete.discrete_model import Logit
+
+
+def load_dataset(dataset_loc):
+# Importing data
+    loansData = pd.read_csv(dataset_loc)
+
+# Making Interest.Rate into floats
+    loansData['Interest.Rate_pc_floats'] = loansData[
+        'Interest.Rate'].map(lambda x: float(x.split("%")[0]))
+
+# Choosing midpoints of categorical variables that represent the FICO.Range
+    loansData['FICO.Score'] = loansData['FICO.Range'].map(
+        lambda x: ((int(str(x).split("-")[0]) + int(str(x).split("-")[1])) / 2.0))
+
+# Removing "months" string from Loan.Length
+    loansData["Loan.Length_months"] = loansData[
+        "Loan.Length"].map(lambda x: int(x.split(" ")[0]))
+
+# Removing % from debt to income ratio
+    loansData['Debt.To.Income.Ratio_pc'] = loansData[
+        'Debt.To.Income.Ratio'].map(lambda x: float(x.split("%")[0]))
+    return loansData
 
 
 def preprocess(df, input_name, ind_vars):
@@ -105,26 +132,10 @@ def check(X, **kwargs):
 
 if __name__ == '__main__':
 
+    dataset_loc = 'https://spark-public.s3.amazonaws.com/dataanalysis/loansData.csv'
 
-# Importing data
-    loansData = pd.read_csv(
-        'https://spark-public.s3.amazonaws.com/dataanalysis/loansData.csv')
-
-# Making Interest.Rate into floats
-    loansData['Interest.Rate_pc_floats'] = loansData[
-        'Interest.Rate'].map(lambda x: float(x.split("%")[0]))
-
-# Choosing midpoints of categorical variables that represent the FICO.Range
-    loansData['FICO.Score'] = loansData['FICO.Range'].map(
-        lambda x: ((int(str(x).split("-")[0]) + int(str(x).split("-")[1])) / 2.0))
-
-# Removing "months" string from Loan.Length
-    loansData["Loan.Length_months"] = loansData[
-        "Loan.Length"].map(lambda x: int(x.split(" ")[0]))
-
-# Removing % from debt to income ratio
-    loansData['Debt.To.Income.Ratio_pc'] = loansData[
-        'Debt.To.Income.Ratio'].map(lambda x: float(x.split("%")[0]))
+    # Load Dataset and perform prelimnary cleanup
+    loansData = load_dataset(dataset_loc)
 
 # Selecting a few of the variables
     Vars = ['Amount.Requested', 'Amount.Funded.By.Investors', 'Interest.Rate_pc_floats',
