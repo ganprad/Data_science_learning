@@ -5,10 +5,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn import linear_model
-from sklearn.cross_validation import train_test_split
-from numpy.linalg import lstsq, inv
-from numpy import dot
 from statsmodels.discrete.discrete_model import Logit
 
 
