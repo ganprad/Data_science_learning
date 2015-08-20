@@ -38,14 +38,14 @@ def load_dataset(dataset_loc):
 def preprocess(df, input_name, ind_vars):
     """Writes out int(bool) array with appropriate mapped condition
 
-    for Y1: interest rate(y) < 12.0 will be 1.0 else 0.0 
-    for Y2: interest rate(y) > 15.0 will be 1.0 else 0.0 
+    for Y1: interest rate(y) <= 12.0 will be 1.0 else 0.0 
+    for Y2: interest rate(y) >= 15.0 will be 1.0 else 0.0 
 
     """
     #df[output_name] = df[input_name].map(lambda x: int(bool(x>=12.0)))
     y = np.array(df[input_name])
-    Y1 = (y < 12.0).astype(np.float)
-    Y2 = (y > 15.0).astype(np.float)
+    Y1 = (y <= 12.0).astype(np.float)
+    Y2 = (y >= 15.0).astype(np.float)
     X = np.matrix(df[ind_vars])
     ones = np.ones(X.shape[0])
     X = np.column_stack([X, ones])
@@ -94,10 +94,13 @@ def pred(p):
 
 def check(X, **kwargs):
     """
-    Checks specified "fico" and "loanamt" values or 
 
-    Random FICO and Loan Amount generated between min and max values 
+    Checks if loan with interest rate <= 12pc will be approved with
+    specified "fico" and "loanamt" values or 
+
+    Random FICO scores and Loan Amounts generated between min and max values 
     of the dataset.
+
 
     """
     random_fico = np.float(
