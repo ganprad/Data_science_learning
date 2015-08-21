@@ -4,18 +4,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn import linear_model
-from sklearn.cross_validation import train_test_split
-from scipy.stats import chisqprob
-from numpy.linalg import lstsq, inv
-from numpy import dot
 
 from statsmodels.discrete.discrete_model import Logit
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
 
-from IPython.core.display import HTML
+
 import zipfile
 
 
@@ -36,8 +31,6 @@ def estimator(s,**kwargs):
     est = smf.ols(formula=s,data=kwargs['data']).fit()
     return est
 
-def short_summary(est):
-    return HTML(est.summary().tables[1].as_html())
 
 if __name__ == '__main__':
     file_loc = 'Data/LoanStats3d.csv.zip'
