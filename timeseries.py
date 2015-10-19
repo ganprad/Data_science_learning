@@ -23,8 +23,6 @@ def preprocess(df):
     return dfts
 
 
-
-
 if __name__=='__main__':
     
     file_loc1 = 'Data/LoanStats3d.csv.zip'
@@ -48,7 +46,7 @@ if __name__=='__main__':
     
     df = pd.concat([df1,df2,df3,df4],axis=0)
     
-    X = dfts.groupby(lambda x: x.year*100+x.month).count()['int_rate']
+    X = df.groupby(lambda x: x.year*100+x.month).count()['int_rate']
     sm.graphics.tsa.plot_acf(X,qstat=True,fft=True)
     plt.show()
 
